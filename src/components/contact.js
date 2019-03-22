@@ -10,8 +10,25 @@ import {
 } from "react-bootstrap";
 
 class Contact extends Component {
+  constructor(props) {
+    super(props);
+  }
+
+  shouldComponentUpdate = (newProps, nexState) => {
+    console.log(newProps);
+    console.log(nexState);
+    return true;
+  };
+
+  handleDelete = id => {
+    this.props.deleteContact(id);
+  };
+
+  handleEdit = contact => {
+    this.props.onEdit(contact);
+  };
+
   render() {
-    console.log(this.props.contactList);
     const contactlist = this.props.contactList.length ? (
       this.props.contactList.map(contact => {
         return (
@@ -32,8 +49,17 @@ class Contact extends Component {
                 </Col>
                 <Col xs lg="2">
                   <ButtonToolbar className="justify-content-center">
-                    <Button variant="info">Edit</Button>
-                    <Button variant="danger" className="ml-2">
+                    <Button
+                      variant="info"
+                      onClick={() => this.handleEdit(contact)}
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      variant="danger"
+                      className="ml-2"
+                      onClick={() => this.handleDelete(contact.id)}
+                    >
                       Delete
                     </Button>
                   </ButtonToolbar>
@@ -56,4 +82,15 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps)(Contact);
+const mapDispatchToProps = dispatch => {
+  return {
+    deleteContact: id => {
+      dispatch({ type: "DELETE_CONTACT", id });
+    }
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Contact);

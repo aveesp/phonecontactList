@@ -26,9 +26,27 @@ const initState = {
 
 const rootReducer = (state = initState, action) => {
   if (action.type === "ADD_CONTACT") {
-    // let newConactList = [..., ];
-    state.contactList.push(action.newContact);
-    console.log(state.contactList);
+    let contactList = [...state.contactList];
+
+    contactList = [
+      ...contactList.slice(0, contactList.length),
+      action.newContact
+    ];
+    state.contactList = contactList;
+    return state;
+  }
+  if (action.type === "DELETE_CONTACT") {
+    let newContactList = state.contactList.filter(
+      contact => action.id !== contact.id
+    );
+    return {
+      ...state,
+      contactList: newContactList
+    };
+  }
+  if (action.type === "EDIT_CONTACT") {
+    let contact = state.contactList.filter(contact => action.id === contact.id);
+    console.log(contact);
   }
   return state;
 };

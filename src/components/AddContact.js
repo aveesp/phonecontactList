@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Modal, Button, Form, Container, Row, Col } from "react-bootstrap";
 import { connect } from "react-redux";
-// import { addContact } from "../actions/addAction";
 import uuid from "uuid";
 
 class AddContact extends Component {
@@ -34,12 +33,18 @@ class AddContact extends Component {
     let newContact = this.state;
     delete newContact.show;
     this.props.addContact(this.state);
+    console.log(this.props);
 
     this.handleClose();
   };
 
   handleOnChange = e => {
     this.setState({ [e.target.id]: e.target.value });
+  };
+
+  showEdit = contact => {
+    console.log("addcontact");
+    console.log(contact);
   };
 
   render() {
