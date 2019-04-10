@@ -10,16 +10,33 @@ import {
 } from "react-bootstrap";
 
 class Contact extends Component {
-  render() {
+  componentWillMount() {
+    // this.props.addContact();
     console.log(this.props.contactList);
-    const contactlist = this.props.contactList.length ? (
+  }
+
+  handleClick = id => {
+    this.props.deleteContact(id);
+  };
+
+  componentWillReceiveProps(nextProps) {
+    console.log(nextProps);
+    // console.log(this.props);
+    // if (nextProps.newPost) {
+    //   this.props.posts.unshift(nextProps.newPost);
+    // }
+  }
+  render() {
+    let { contactList } = this.props;
+    console.log(contactList);
+    const contcatList = this.props.contactList.length ? (
       this.props.contactList.map(contact => {
         return (
           <Card key={contact.id} className="mt-3">
             <Card.Body>
               <Row>
-                <Col xs lg="2">
-                  {contact.name}
+                <Col xs lg="2" className="text-left">
+                  <strong>{contact.name}</strong>
                 </Col>
                 <Col xs lg="2">
                   {contact.company}
@@ -32,8 +49,17 @@ class Contact extends Component {
                 </Col>
                 <Col xs lg="2">
                   <ButtonToolbar className="justify-content-center">
-                    <Button variant="info">Edit</Button>
-                    <Button variant="danger" className="ml-2">
+                    <Button
+                      variant="info"
+                      onClick={() => this.props.editContact(contact)}
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      variant="danger"
+                      className="ml-2"
+                      onClick={() => this.handleClick(contact.id)}
+                    >
                       Delete
                     </Button>
                   </ButtonToolbar>
@@ -44,9 +70,11 @@ class Contact extends Component {
         );
       })
     ) : (
-      <div> NO Contacts! </div>
+      <div>
+        <h3>NO Contacts!</h3>
+      </div>
     );
-    return <Container className="contacts-list">{contactlist}</Container>;
+    return <Container className="contacts-list">{contcatList}</Container>;
   }
 }
 
@@ -56,4 +84,15 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps)(Contact);
+const mapDispatchToProps = dispatch => {
+  return {
+    deleteContact: id => {
+      dispatch({ type: "DELETE_CONTACT", id: id });
+    }
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Contact);
